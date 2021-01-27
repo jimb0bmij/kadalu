@@ -243,13 +243,13 @@ kadalu_operator)
 test_kadalu)
     date
 
-    get_pvc_and_check examples/sample-test-app1.yaml "Replica1" 2 191
+    get_pvc_and_check examples/sample-test-app3.yaml "Replica3" 2 60
 
-    get_pvc_and_check examples/sample-test-app3.yaml "Replica3" 2 191
+    #get_pvc_and_check examples/sample-test-app1.yaml "Replica1" 2 60
+    
+    #get_pvc_and_check examples/sample-external-storage.yaml "External (PV)" 1 60
 
-    #get_pvc_and_check examples/sample-external-storage.yaml "External (PV)" 1 131
-
-    get_pvc_and_check examples/sample-external-kadalu-storage.yaml "External (Kadalu)" 2 131
+    #get_pvc_and_check examples/sample-external-kadalu-storage.yaml "External (Kadalu)" 2 60
 
     cp tests/storage-add.yaml /tmp/kadalu-storage.yaml
     sed -i -e "s/DISK/${DISK}/g" /tmp/kadalu-storage.yaml
@@ -262,7 +262,7 @@ test_kadalu)
 
     echo "After modification"
 
-    #get_pvc_and_check examples/sample-test-app2.yaml "Replica2" 2 191
+    #get_pvc_and_check examples/sample-test-app2.yaml "Replica2" 2 60
 
     # Log everything so we are sure if things are as expected
     for p in $(kubectl -n kadalu get pods -o name); do
