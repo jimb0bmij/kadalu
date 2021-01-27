@@ -13,7 +13,7 @@ from kadalulib import logf
 
 
 HOSTVOL_MOUNTDIR = "/mnt"
-GLUSTERFS_CMD = "/usr/sbin/glusterfs"
+GLUSTERFS_CMD = "/opt/sbin/glusterfs"
 MOUNT_CMD = "/usr/bin/mount"
 UNMOUNT_CMD = "/usr/bin/umount"
 

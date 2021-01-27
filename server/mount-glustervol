@@ -39,9 +39,9 @@ Template(content).stream(**data).dump(client_volfile)
 os.makedirs("/mnt/%s" % volname)
 
 os.execv(
-    "/usr/sbin/glusterfs",
+    "glusterfs",
     [
-        "/usr/sbin/glusterfs",
+        "glusterfs",
         "--process-name", "fuse",
         "--volfile-id=%s" % volname,
         "-f", client_volfile,

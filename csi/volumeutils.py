@@ -17,13 +17,12 @@ from kadalulib import execute, PV_TYPE_SUBVOL, PV_TYPE_VIRTBLOCK, \
     retry_errors, is_gluster_mount_proc_running, SizeAccounting
 
 
-GLUSTERFS_CMD = "/usr/sbin/glusterfs"
+GLUSTERFS_CMD = "/opt/sbin/glusterfs"
 MOUNT_CMD = "/usr/bin/mount"
 UNMOUNT_CMD = "/usr/bin/umount"
 MKFS_XFS_CMD = "/usr/sbin/mkfs.xfs"
 RESERVED_SIZE_PERCENTAGE = 10
 HOSTVOL_MOUNTDIR = "/mnt"
-GLUSTERFS_CMD = "/usr/sbin/glusterfs"
 VOLFILES_DIR = "/kadalu/volfiles"
 TEMPLATES_DIR = "/kadalu/templates"
 VOLINFO_DIR = "/var/lib/gluster"

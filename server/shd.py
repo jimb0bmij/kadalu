@@ -51,9 +51,9 @@ def start():
     generate_shd_volfile(volfile_path, volname, voltype)
 
     os.execv(
-        "/usr/sbin/glusterfs",
+        "glusterfs",
         [
-            "/usr/sbin/glusterfs",
+            "glusterfs",
             "-N",
             "--volfile-id", "gluster/glustershd",
             "-p", "/var/run/gluster/glustershd.pid",
