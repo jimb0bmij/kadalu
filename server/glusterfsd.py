@@ -101,49 +101,48 @@ def create_and_mount_brick(brick_device, brick_path, brickfs):
                 mode=0o755,
                 exist_ok=True)
 
-    if brickfs == "xfs":
-        try:
-            execute("mount", "-oprjquota", "-t", "xfs", brick_device, mountdir)
-        except CommandException as err:
-            if 'wrong fs type' in err.err:
-                # This error pops up when we do mount on an empty device or wrong fs
-                # Try doing a mkfs and try mount
+    try:
+        execute("mount", brick_device, mountdir)
+    except CommandException as err:
+        if 'wrong fs type' in err.err:
+            # This error pops up when we do mount on an empty device or wrong fs
+            # Try doing a mkfs and try mount
+            try:
+                execute("mkfs.xfs", brick_device)
+            except CommandException as err:
+                if "appears to contain an existing filesystem" not in err.err:
+                    logging.error(logf(
+                        "Failed to create file system",
+                        fstype=brickfs,
+                        device=brick_device,
+                    ))
+                    sys.exit(1)
+                else:
+                    pass
                 try:
-                    execute("mkfs.xfs", brick_device)
+                    execute("mount", brick_device, mountdir)
                 except CommandException as err:
-                    if "appears to contain an existing filesystem" not in err.err:
-                        logging.error(logf(
-                            "Failed to create file system",
-                            fstype=brickfs,
-                            device=brick_device,
-                        ))
-                        sys.exit(1)
-                    else:
-                        pass
-                    try:
-                        execute("mount", "-oprjquota", "-t", "xfs", brick_device, mountdir)
-                    except CommandException as err:
-                        logging.error(logf(
-                            "Failed to mount export brick (after mkfs)",
-                            fstype=brickfs,
-                            device=brick_device,
-                            mountdir=mountdir,
-                            error=err,
-                        ))
-                        sys.exit(1)
+                    logging.error(logf(
+                        "Failed to mount export brick (after mkfs)",
+                        fstype=brickfs,
+                        device=brick_device,
+                        mountdir=mountdir,
+                        error=err,
+                    ))
+                    sys.exit(1)
 
-            elif 'already mounted' not in err.err:
-                logging.error(logf(
-                    "Failed to mount export brick",
-                    fstype=brickfs,
-                    device=brick_device,
-                    mountdir=mountdir,
-                    error=err,
-                ))
-                sys.exit(1)
+        elif 'already mounted' not in err.err:
+            logging.error(logf(
+                "Failed to mount export brick",
+                fstype=brickfs,
+                device=brick_device,
+                mountdir=mountdir,
+                error=err,
+            ))
+            sys.exit(1)
 
-            else:
-                pass
+        else:
+            pass
 
 
 def start():
