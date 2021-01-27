@@ -28,7 +28,7 @@ def generate_shd_volfile(client_volfile, volname, voltype):
         count = 3
         if data["type"] == "Replica2":
             count = 2
-        for i in range(0, (len(data["bricks"]) / count)):
+        for i in range(0, int(len(data["bricks"]) / count)):
             data["dht_subvol"].append("%s-replica-%d" % (data["volname"], i))
 
     template_file_path = os.path.join(TEMPLATES_DIR,
