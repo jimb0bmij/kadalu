@@ -18,7 +18,7 @@ RUN apt-get update -yq && \
     curl -L https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/`uname -m | sed 's|aarch64|arm64|' | sed 's|x86_64|amd64|'`/kubectl -o /usr/bin/kubectl && \
     chmod +x /usr/bin/kubectl &&  python3 -m venv $VIRTUAL_ENV && \
     cd /kadalu && pip install glustercli grpcio kubernetes==11.0.0 \
-    jinja2 requests datetime xxhash googleapis-common-protos xattr && \
+    jinja2 requests datetime xxhash googleapis-common-protos pyxattr && \
     apt-get autoremove --purge -y gcc python3-dev build-essential python3-pip curl && \
     apt-get -y clean && \
     rm -rf /var/lib/apt/lists/*
