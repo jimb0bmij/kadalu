@@ -351,6 +351,10 @@ def create_subdir_volume(hostvol_mnt, volname, size):
         pvsize_buffer=pvsize_buffer,
     ))
 
+    #setfattr -n trusted.glusterfs.namespace -v true
+    #setfattr -n trusted.gfs.squota.limit -v size
+    retry_errors(os.setxattr, [os.path.join(hostvol_mnt, volpath), "trusted.glusterfs.namespace", "true"], [ENOTCONN])
+    retry_errors(os.setxattr, [os.path.join(hostvol_mnt, volpath), "trusted.gfs.squota.limit", size], [ENOTCONN])
     count = 0
     while True:
         count += 1
@@ -450,6 +454,7 @@ def update_subdir_volume(hostvol_mnt, volname, expansion_requested_pvsize):
         pvsize_buffer=pvsize_buffer,
     ))
 
+    retry_errors(os.setxattr, [os.path.join(hostvol_mnt, volpath), "trusted.gfs.squota.limit", expansion_requested_pvsize], [ENOTCONN])
     count = 0
     while True:
         count += 1
