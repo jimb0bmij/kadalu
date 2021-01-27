@@ -27,7 +27,7 @@ end-volume
 
 volume {{ volname }}-dht
     type cluster/distribute
-    subvolumes {{ dht_subvol }}
+    subvolumes {{ dht_subvol|join(' ') }}
 end-volume
 
 volume {{ volname }}-utime
