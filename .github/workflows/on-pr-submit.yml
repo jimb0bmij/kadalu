@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - devel
+      - rfe_tests
     paths-ignore:
       - 'doc/**'
       - 'extras/**'
