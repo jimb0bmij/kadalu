@@ -4,11 +4,13 @@ on:
   pull_request:
     branches:
       - devel
-      - rfe_tests
     paths-ignore:
       - 'doc/**'
       - 'extras/**'
       - '**.md'
+  push:
+    branches:
+      - storage_series_tests
 
 jobs:
   pylint:
