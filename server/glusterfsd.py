@@ -180,9 +180,9 @@ def start():
     send_analytics_tracker("server", uid)
 
     os.execv(
-        "glusterfsd",
+        "/opt/sbin/glusterfsd",
         [
-            "glusterfsd",
+            "/opt/sbin/glusterfsd",
             "-N",
             "--volfile-id", volfile_id,
             "-p", "/var/run/gluster/glusterfsd-%s.pid" % brick_path_name,
