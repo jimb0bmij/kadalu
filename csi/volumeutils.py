@@ -355,12 +355,12 @@ def create_subdir_volume(hostvol_mnt, volname, size):
     retry_errors(os.setxattr,
                  [os.path.join(hostvol_mnt, volpath),
                   "trusted.glusterfs.namespace",
-                  "true"],
+                  "true".encode()],
                  [ENOTCONN])
     retry_errors(os.setxattr,
                  [os.path.join(hostvol_mnt, volpath),
                   "trusted.gfs.squota.limit",
-                  size],
+                  str(size).encode()],
                  [ENOTCONN])
     count = 0
     while True:
@@ -464,7 +464,7 @@ def update_subdir_volume(hostvol_mnt, volname, expansion_requested_pvsize):
     retry_errors(os.setxattr,
                  [os.path.join(hostvol_mnt, volpath),
                   "trusted.gfs.squota.limit",
-                  expansion_requested_pvsize],
+                  str(expansion_requested_pvsize).encode()],
                  [ENOTCONN])
     count = 0
     while True:
