@@ -6,7 +6,6 @@ fail=0
 ARCH=`uname -m | sed 's|aarch64|arm64|' | sed 's|x86_64|amd64|'`
 function wait_till_pods_start() {
     # give it some time
-    sleep 7
 
     cnt=0
     local_timeout=200
@@ -236,7 +235,8 @@ kadalu_operator)
     sed -i -e "s/DISK/${DISK}/g" tests/get-minikube-pvc.yaml
     kubectl apply -f tests/get-minikube-pvc.yaml
 
-    sleep 1
+    # Generally it needs some time for operator to get started, give it time, so some logs are reduced in tests
+    sleep 15;
     kubectl apply -f /tmp/kadalu-storage.yaml
 
     wait_till_pods_start
@@ -245,13 +245,13 @@ kadalu_operator)
 test_kadalu)
     date
 
-    get_pvc_and_check examples/sample-test-app3.yaml "Replica3" 2 60
+    get_pvc_and_check examples/sample-test-app3.yaml "Replica3" 2 90
 
-    get_pvc_and_check examples/sample-test-app1.yaml "Replica1" 2 60
+    get_pvc_and_check examples/sample-test-app1.yaml "Replica1" 2 90
     
     #get_pvc_and_check examples/sample-external-storage.yaml "External (PV)" 1 60
 
-    get_pvc_and_check examples/sample-external-kadalu-storage.yaml "External (Kadalu)" 2 60
+    get_pvc_and_check examples/sample-external-kadalu-storage.yaml "External (Kadalu)" 2 90
 
     cp tests/storage-add.yaml /tmp/kadalu-storage.yaml
     sed -i -e "s/DISK/${DISK}/g" /tmp/kadalu-storage.yaml
