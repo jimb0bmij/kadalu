@@ -6,13 +6,15 @@ fail=0
 ARCH=`uname -m | sed 's|aarch64|arm64|' | sed 's|x86_64|amd64|'`
 function wait_till_pods_start() {
     # give it some time
+    sleep 7
+
     cnt=0
     local_timeout=200
     while true; do
 	cnt=$((cnt + 1))
 	sleep 2
 	ret=$(kubectl get pods -nkadalu -o wide | grep 'Running' | wc -l)
-	if [[ $ret -ge 9 ]]; then
+	if [[ $ret -ge 11 ]]; then
 	    echo "Successful after $cnt seconds"
 	    break
 	fi

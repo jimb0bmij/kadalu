@@ -405,8 +405,8 @@ spec:
               mountPath: "/dev"
             - name: varlog
               mountPath: "/var/log/gluster"
-            - name: mountlog
-              mountPath: "/mnt"
+            - name: mountpath
+              mountPath: /mnt
         - name: kadalu-logging
           image: busybox
           command: ["/bin/sh"]
@@ -417,7 +417,7 @@ spec:
         - name: kadalu-quota-crawler
           image: docker.io/kadalu/quota-crawler:latest
           volumeMounts:
-            - name: mountlog
+            - name: mountpath
               mountPath: /mnt
         - name: csi-resizer
           image: docker.io/raspbernetes/csi-external-resizer:1.0.0
@@ -436,7 +436,7 @@ spec:
           volumeMounts:
             - name: socket-dir
               mountPath: /var/lib/csi/sockets/pluginproxy/
-            - name: mountlog
+            - name: mountpath
               mountPath: /mnt
       volumes:
         - name: socket-dir
