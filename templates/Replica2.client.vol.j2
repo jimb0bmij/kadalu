@@ -1,3 +1,10 @@
+volume {{ volume_id }}-ta
+    type protocol/client
+    option remote-host {{ tiebreaker["node"] }}
+    option remote-port {{ tiebreaker["port"] }}
+    option remote-subvolume {{ tiebreaker["path"] }}
+end-volume
+
 {% for brick in bricks %}
 volume {{ volname }}-client-{{ brick["brick_index"] }}
     type protocol/client
