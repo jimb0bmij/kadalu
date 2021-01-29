@@ -30,7 +30,7 @@ volume {{ volname }}-locks
 end-volume
 
 volume {{ volname }}-quota
-    type features/locks
+    type features/simple-quota
     subvolumes {{ volname }}-locks
 end-volume
 

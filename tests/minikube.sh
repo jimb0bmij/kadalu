@@ -247,9 +247,9 @@ test_kadalu)
 
     get_pvc_and_check examples/sample-test-app3.yaml "Replica3" 2 60
 
-    #get_pvc_and_check examples/sample-test-app1.yaml "Replica1" 2 60
+    get_pvc_and_check examples/sample-test-app1.yaml "Replica1" 2 60
     
-    #get_pvc_and_check examples/sample-external-storage.yaml "External (PV)" 1 60
+    get_pvc_and_check examples/sample-external-storage.yaml "External (PV)" 1 60
 
     #get_pvc_and_check examples/sample-external-kadalu-storage.yaml "External (Kadalu)" 2 60
 
@@ -260,9 +260,8 @@ test_kadalu)
     kubectl apply -f /tmp/kadalu-storage.yaml
 
     sleep 5;
-    wait_till_pods_start
-
     echo "After modification"
+    wait_till_pods_start
 
     #get_pvc_and_check examples/sample-test-app2.yaml "Replica2" 2 60
 
