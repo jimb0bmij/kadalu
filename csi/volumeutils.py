@@ -363,9 +363,12 @@ def create_subdir_volume(hostvol_mnt, volname, size):
                       "trusted.gfs.squota.limit",
                       str(size).encode()],
                      [ENOTCONN])
-    except:
-        # On mounts which have no simple quota, it fails, but thats OK
-        pass
+    # noqa # pylint: disable=broad-except
+    except Exception as err:
+        logging.info(logf(
+            "Failed to set quota using simple-quota. Continuing",
+            error=err
+        ))
 
     count = 0
     while True:
