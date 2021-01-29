@@ -4,7 +4,6 @@ Starts Gluster Brick(fsd) process
 import os
 import uuid
 import sys
-import json
 import logging
 
 from jinja2 import Template
@@ -61,25 +60,23 @@ def set_volume_id_xattr(brick_path, volume_id):
         sys.exit(1)
 
 
-def generate_brick_volfile(volfile_path, volname):
+def generate_brick_volfile(volfile_path, volname, volume_id, brick_path):
     """
     Generate Volfile based on Volinfo stored in Config map
     For now, Generated Volfile is used in configmap
     """
-    data = {}
-    with open(os.path.join(VOLINFO_DIR, "%s.info" % volname)) as info_file:
-        data = json.load(info_file)
-
     content = ""
-    template_file = os.path.join(
-        TEMPLATES_DIR,
-        "%s.brick%s.vol.j2" % (data["type"], os.environ["BRICK_INDEX"])
-    )
+    template_file = os.path.join(TEMPLATES_DIR, "brick.vol.j2")
     with open(template_file) as tmpl_file:
         content = tmpl_file.read()
 
-    tmpl = Template(content)
+    data = {}
+    # Brick volfile needs only these 3 parameters
+    data["volname"] = volname
+    data["volume_id"] = volume_id
+    data["brick_path"] = brick_path
 
+    tmpl = Template(content)
     tmpl.stream(**data).dump(volfile_path)
 
 
@@ -167,7 +164,7 @@ def start():
 
     volfile_id = "%s.%s.%s" % (volname, nodename, brick_path_name)
     volfile_path = os.path.join(VOLFILES_DIR, "%s.vol" % volfile_id)
-    generate_brick_volfile(volfile_path, volname)
+    generate_brick_volfile(volfile_path, volname, volume_id, brick_path)
 
     # UID is stored at the time of installation in configmap.
     uid = None

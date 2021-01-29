@@ -352,16 +352,21 @@ def create_subdir_volume(hostvol_mnt, volname, size):
 
     #setfattr -n trusted.glusterfs.namespace -v true
     #setfattr -n trusted.gfs.squota.limit -v size
-    retry_errors(os.setxattr,
-                 [os.path.join(hostvol_mnt, volpath),
-                  "trusted.glusterfs.namespace",
-                  "true".encode()],
-                 [ENOTCONN])
-    retry_errors(os.setxattr,
-                 [os.path.join(hostvol_mnt, volpath),
-                  "trusted.gfs.squota.limit",
-                  str(size).encode()],
-                 [ENOTCONN])
+    try:
+        retry_errors(os.setxattr,
+                     [os.path.join(hostvol_mnt, volpath),
+                      "trusted.glusterfs.namespace",
+                      "true".encode()],
+                     [ENOTCONN])
+        retry_errors(os.setxattr,
+                     [os.path.join(hostvol_mnt, volpath),
+                      "trusted.gfs.squota.limit",
+                      str(size).encode()],
+                     [ENOTCONN])
+    except:
+        # On mounts which have no simple quota, it fails, but thats OK
+        pass
+
     count = 0
     while True:
         count += 1
@@ -791,7 +796,7 @@ def generate_client_volfile(volname):
     Template(content).stream(**data).dump(client_volfile)
 
 
-def mount_glusterfs(volume, mountpoint):
+def mount_glusterfs(volume, mountpoint, is_client=False):
     """Mount Glusterfs Volume"""
     if volume["type"] == "External":
         volname = volume['g_volname']
@@ -824,7 +829,8 @@ def mount_glusterfs(volume, mountpoint):
             mount_glusterfs_with_host(volume['g_volname'],
                                       mountpoint,
                                       volume['g_host'],
-                                      volume['g_options'])
+                                      volume['g_options'],
+                                      is_client)
         return
 
     with mount_lock:
@@ -840,6 +846,11 @@ def mount_glusterfs(volume, mountpoint):
             "-f", "%s/%s.client.vol" % (VOLFILES_DIR, volume['name']),
             mountpoint
         ]
+
+        # required for 'simple-quota'
+        if not is_client:
+            cmd.extend(["--client-pid", "-14"])
+
         try:
             execute(*cmd)
         except CommandException as err:
@@ -855,7 +866,7 @@ def mount_glusterfs(volume, mountpoint):
 
 
 # noqa # pylint: disable=unused-argument
-def mount_glusterfs_with_host(volname, mountpoint, hosts, options=None):
+def mount_glusterfs_with_host(volname, mountpoint, hosts, options=None, is_client=False):
     """Mount Glusterfs Volume"""
 
     # Ignore if already mounted
@@ -892,6 +903,10 @@ def mount_glusterfs_with_host(volname, mountpoint, hosts, options=None):
         "-l", "%s" % log_file,
         "--volfile-id", volname,
     ]
+    # on server component we can mount glusterfs with client-pid
+    if not is_client:
+        cmd.extend(["--client-pid", "-14"])
+
     for host in hosts.split(','):
         cmd.extend(["--volfile-server", host])
 
