@@ -29,11 +29,16 @@ volume {{ volname }}-locks
     subvolumes {{ volname }}-access-control
 end-volume
 
+volume {{ volname }}-quota
+    type features/locks
+    subvolumes {{ volname }}-locks
+end-volume
+
 volume {{ volname }}-upcall
     type features/upcall
     option cache-invalidation off
     option cache-invalidation-timeout 60
-    subvolumes {{ volname }}-locks
+    subvolumes {{ volname }}-quota
 end-volume
 
 volume {{ volname }}-io-threads
