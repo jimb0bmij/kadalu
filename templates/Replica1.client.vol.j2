@@ -1,5 +1,5 @@
 {% for brick in bricks %}
-volume {{ volname }}-client-{{ brick["idx"] }}
+volume {{ volname }}-client-{{ brick["brick_index"] }}
     type protocol/client
     option remote-subvolume {{ brick["brick_path"] }}
     option remote-host {{ brick["node"] }}
